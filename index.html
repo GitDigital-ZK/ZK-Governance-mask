@@ -1,0 +1,373 @@
+
+<a href='https://ko-fi.com/T6T61WAZYZ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zk-Identity-masks · Privacy-preserving identity masks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            color: #334155;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .badges {
+            margin: 1.5rem 0;
+        }
+        .badges img {
+            height: 20px;
+            margin: 0 4px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s;
+        }
+        .tab-button:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+        .tab-button.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+            background: transparent;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+        }
+        code {
+            font-family: inherit;
+        }
+        .wiki-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .wiki-link {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #0f172a;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .wiki-link:hover {
+            background: #e2e8f0;
+        }
+        .wiki-link span {
+            display: block;
+            font-size: 0.875rem;
+            color: #475569;
+            margin-top: 0.25rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>zk-Identity-masks</h1>
+            <div class="subtitle">Privacy-preserving identity masks for selective attribute disclosure</div>
+            <div class="badges">
+                <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT">
+                <img src="https://img.shields.io/github/v/release/zk-Identity-masks?include_prereleases" alt="release">
+                <img src="https://img.shields.io/github/actions/workflow/status/zk-Identity-masks/ci.yml?branch=main" alt="build">
+            </div>
+        </header>
+
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">Code examples</h2>
+            <div class="tabs" id="tabs">
+                <button class="tab-button active" onclick="switchTab('javascript')">JavaScript (Browser)</button>
+                <button class="tab-button" onclick="switchTab('nodejs')">Node.js</button>
+                <button class="tab-button" onclick="switchTab('python')">Python</button>
+                <button class="tab-button" onclick="switchTab('rust')">Rust</button>
+            </div>
+
+            <!-- JavaScript (Browser) -->
+            <div id="javascript" class="tab-pane active">
+                <pre><code class="language-javascript">import { createMask, RegistryClient } from 'zk-identity-masks-sdk';
+
+// Create a mask for age 25 and country US
+const age = new Uint8Array(32); age[0] = 25;
+const country = new Uint8Array(32); country[0] = 840;
+const mask = createMask([age, country]);
+
+console.log('Mask commitment:', Buffer.from(mask.getCommitment()).toString('hex'));
+
+// Generate a proof that age >= 18
+const proof = await mask.createProof('age >= 18', new Uint8Array(32));
+
+// Verify proof (using Zig verifier via WASM)
+const isValid = await verifyProof(proof);
+console.log('Proof valid:', isValid);</code></pre>
+            </div>
+
+            <!-- Node.js -->
+            <div id="nodejs" class="tab-pane">
+                <pre><code class="language-javascript">const { createMask, RegistryClient } = require('zk-identity-masks-sdk');
+
+async function main() {
+  const age = Buffer.alloc(32); age[0] = 25;
+  const country = Buffer.alloc(32); country[0] = 840;
+  const mask = createMask([age, country]);
+
+  // Register on Solana devnet
+  const registry = new RegistryClient({ rpcUrl: 'https://api.devnet.solana.com' });
+  const owner = Buffer.alloc(32); // your public key
+  const expiry = Math.floor(Date.now() / 1000) + 365*24*3600;
+  const tx = await registry.registerMask(mask.getCommitment(), owner, expiry);
+  console.log('Registration tx:', tx);
+}
+
+main();</code></pre>
+            </div>
+
+            <!-- Python -->
+            <div id="python" class="tab-pane">
+                <pre><code class="language-python"># Example using the Python binding (requires `pip install zk-identity-masks`)
+from zk_identity_masks import Mask, RegistryClient
+
+# Create mask
+age = bytearray(32); age[0] = 25
+country = bytearray(32); country[0] = 840
+mask = Mask([age, country])
+
+print(f"Commitment: {mask.commitment.hex()}")
+
+# Generate proof
+proof = mask.create_proof("age >= 18", b"context")
+print("Proof generated")
+
+# Verify (calls Zig verifier via FFI)
+is_valid = proof.verify()
+print("Valid:", is_valid)</code></pre>
+            </div>
+
+            <!-- Rust -->
+            <div id="rust" class="tab-pane">
+                <pre><code class="language-rust">use zk_identity_masks::{Mask, RegistryClient};
+
+#[tokio::main]
+async fn main() {
+    let mut age = [0u8; 32];
+    age[0] = 25;
+    let mut country = [0u8; 32];
+    country[0] = 840;
+
+    let mask = Mask::new(vec![age, country], None);
+    println!("Commitment: {}", hex::encode(mask.commitment()));
+
+    // Generate proof
+    let proof = mask.create_proof("age >= 18", &[0u8; 32]).await;
+    println!("Proof: {:?}", proof);
+
+    // Verify using Zig verifier
+    let valid = proof.verify().await;
+    println!("Valid: {}", valid);
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">📚 Wiki & Documentation</h2>
+            <div class="wiki-links">
+                <a href="#" class="wiki-link">
+                    Getting Started
+                    <span>Create your first mask</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    API Reference
+                    <span>Full SDK documentation</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    Mask Registry
+                    <span>On-chain registration & revocation</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    Circuit Specs
+                    <span>Predicates and constraints</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    Security & Audits
+                    <span>Formal verification and reports</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    FAQ
+                    <span>Common questions</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    Contributing
+                    <span>How to get involved</span>
+                </a>
+                <a href="#" class="wiki-link">
+                    Release Notes
+                    <span>Changelog and versions</span>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 zk-Identity-masks contributors. Open source under the MIT License.</p>
+            <p style="margin-top: 0.5rem;">⭐️ Star us on <a href="#">GitHub</a> | Join our <a href="#">Discord</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Show selected pane and activate button
+            document.getElementById(tabId).classList.add('active');
+            // Find the button that corresponds (by text content rough match - simpler: use dataset)
+            // We'll just activate based on index; for simplicity, we set active by triggering click on button
+            // But we have the buttons with onclick; we can just set active class manually.
+            // Better: loop buttons and match tabId to expected text.
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => {
+                const btnText = btn.textContent.trim().toLowerCase();
+                if (btnText.includes(tabId) || (tabId === 'nodejs' && btnText.includes('node'))) {
+                    btn.classList.add('active');
+                }
+            });
+            // Re-run syntax highlighting for new active tab
+            document.querySelectorAll('#tabs + pre code').forEach(block => {
+                hljs.highlightBlock(block);
+            });
+        }
+    </script>
+</body>
+</html>                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Risk Scoring</h3>
+                        <p>Automated AML screening and transaction monitoring. Real-time risk scoring for wallets and transactions based on global watchlists.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Program Library</h3>
+                        <p>A set of on-chain Solana programs for managing verified user statuses, whitelists, and compliance rules enforced by smart contracts.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-file-contract"></i>
+                        <h3>Audit Trail</h3>
+                        <p>Generate immutable, on-chain records of all KYC checks and compliance decisions for easy reporting to auditors and regulators.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="get-started">
+                <h2>Quick Start</h2>
+                <h3>Installation</h3>
+                <p>Install the SDK package via npm or yarn:</p>
+                <pre><code>npm install @gitdigital-products/solana-kyc-sdk
+# or
+yarn add @gitdigital-products/solana-kyc-sdk</code></pre>
+                <h3>Basic Usage</h3>
+                <p>Initialize the SDK and perform a basic check:</p>
+                <pre><code>import { KYCClient } from '@gitdigital-products/solana-kyc-sdk';
+import { Connection, clusterApiUrl } from '@solana/web3.js';
+
+const connection = new Connection(clusterApiUrl('devnet'));
+const client = new KYCClient(connection, YOUR_PROVIDER_CONFIG);
+
+// Example: Check a user's wallet status
+const walletAddress = '...';
+const status = await client.getVerificationStatus(walletAddress);
+console.log(`KYC Status: ${status}`);</code></pre>
+                <a href="#" class="btn" style="margin-top:1rem;"><i class="fas fa-book"></i> Read Full Documentation</a>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 GitDigital Products. All rights reserved.</p>
+            <p>This SDK is provided for integration purposes. Developers are responsible for ensuring full regulatory compliance in their specific jurisdictions.</p>
+        </footer>
+    </div>
+</body>
+</html>
+```
