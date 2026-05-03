@@ -1,3 +1,15 @@
+# ZK‑Governance‑Mask
+
+**Anonymous, Sybil‑resistant on‑chain governance using zero‑knowledge proofs.**
+
+A *Governance Mask* lets a user prove voting eligibility (token ownership, Merkle inclusion, or badge possession) without ever revealing their public key, token balance, or identity, while preventing double‑voting through unique cryptographic nullifiers.
+
+---
+
+## Architecture Overview
+
+
+
 ```mermaid
     graph TD;
     A[User] -->|Submits KYC Info| B(SDK);
