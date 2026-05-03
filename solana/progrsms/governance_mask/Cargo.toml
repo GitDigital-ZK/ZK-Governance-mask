@@ -1,0 +1,33 @@
+solana/programs/governance_mask/Cargo.toml
+
+```toml
+[package]
+name = "governance-mask"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+anchor-lang = { version = "0.30.0", features = ["init-if-needed"] }
+solana-program = "1.18"
+bytemuck = "1.14"
+
+# Alt-BN128 pairing support for proof verification
+ark-bn254 = "0.4"
+ark-ec = "0.4"
+ark-ff = "0.4"
+ark-groth16 = { version = "0.4", features = ["parallel"] }
+ark-serialize = "0.4"
+ark-relations = "0.4"
+ark-snark = "0.4"
+num-bigint = "0.4"
+
+[features]
+no-entrypoint = []
+
+[profile.release]
+overflow-checks = true
+```
+
